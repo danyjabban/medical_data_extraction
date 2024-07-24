@@ -1,8 +1,9 @@
 import google.generativeai as genai
-GOOGLE_API_KEY = 'AIzaSyCUO-z0uF8qvxmgqbKMK2R4z9_2HiXChy0'
+import json
+api_keys = json.load("secrets.json")
+GOOGLE_API_KEY = api_keys["googleai_api_key"]
 genai.configure(api_key=GOOGLE_API_KEY)
 from pathlib import Path
-import json
 
 
 MODEL_CONFIG = {

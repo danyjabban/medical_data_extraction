@@ -1,4 +1,6 @@
 from openai import OpenAI
+import json
+api_keys = json.load("secrets.json")
 client = OpenAI(api_key='sk-proj-65KZmzkViEnxNZrV23qmT3BlbkFJ2Wo4v86ZAdv5X9pell2l')
 import tiktoken
 import numpy as np
