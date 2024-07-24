@@ -24,8 +24,6 @@ def convert_image_to_text(image, user_prompt):
                 Input images in the form of medical documents will be provided to you,
                 and your task is to respond to questions based on the content of the input image.
                 """
-    # user_prompt = """identify the medications the person has used and the dates they started and stopped if that information is available.
-    #             return as a json where each key the medication and the value is a tuple of start and stop date"""
     
     input_prompt= [system_prompt, image, user_prompt]
     response = model.generate_content(input_prompt)
@@ -34,5 +32,6 @@ def convert_image_to_text(image, user_prompt):
 
 def summarize_image(image):
     user_prompt = "summerize the information on this medical form"
-    convert_image_to_text(image, user_prompt)
+    summary = convert_image_to_text(image, user_prompt)
+    return summary
 

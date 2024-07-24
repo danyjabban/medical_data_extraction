@@ -16,11 +16,11 @@ def ingest_info(file):
     pdf_file = fitz.open(file)
     all_embeddings = []
     page_info_dict = {}
-    for page_idx in [86]:#range(pdf_file.page_count):
-        text_from_text = process_text(page_idx, pdf_file, file)
-        text_from_table = process_table(page_idx, file)
+    for page_idx in range(0,10):#[42]: #[86]:#range(pdf_file.page_count):
+        # text_from_text = process_text(page_idx, pdf_file, file)
+        text_from_text = ''
         text_from_image = process_image(page_idx, pdf_file)
-        page_text = text_from_text + '\n' + text_from_table + '\n' + text_from_image
+        page_text = text_from_text + '\n' + text_from_image
 
         vocab = get_page_vocab(page_text)
         chunks = chunk_helper(page_text)
@@ -30,7 +30,7 @@ def ingest_info(file):
 
         all_embeddings = all_embeddings + page_embeddings
         page_info_dict[page_idx] = [vocab, page_embed_idxs]
-        
+
     all_embeddings = np.array(all_embeddings)
     return all_embeddings, page_info_dict
                 
@@ -47,9 +47,7 @@ def process_table(page_idx, file):
 
 def process_text(page_idx, pdf_file, file):
     page = pdf_file[page_idx]
-
     text = page.get_text()
-
     parsed = is_parsed(text)
     if not parsed:
         pdf = pdfium.PdfDocument(file)
@@ -67,6 +65,7 @@ def is_parsed(text):
 def process_image(page_idx, pdf_file):
     page = pdf_file[page_idx]
     image_li = page.get_images()
+    text = ''
     if image_li:
         for image_index, img in enumerate(page.get_images(), start=1):
             #get the XREF of the image
@@ -76,9 +75,14 @@ def process_image(page_idx, pdf_file):
             image_bytes = base_image["image"]
             image = Image.open(io.BytesIO(image_bytes))
             text = pytesseract.image_to_string(image, lang='eng')
-
+            # print(text)
             data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
             conf = np.mean([numb for numb in data.get('conf') if numb > 0])
+            print(page_idx)
+            print('ocr', conf)
+            if conf < 75:
+                print('summary')
+                text = summarize_image(image)
     return text
             
 

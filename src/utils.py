@@ -1,4 +1,5 @@
 from embedding_process import get_embedding
+import pypdfium2 as pdfium
 
 
 def chunk_helper(text):
@@ -23,3 +24,10 @@ def get_page_vocab(text):
     vocab = text.split(' ')
     vocab = set(vocab)
     return vocab
+
+
+def get_image_of_page(page_idx, file):
+    pdf = pdfium.PdfDocument(file)
+    page = pdf.get_page(page_idx)
+    pil_image = page.render(scale = 300/72).to_pil()
+    return pil_image
