@@ -9,6 +9,8 @@ import pytesseract
 import io
 from PIL import Image
 from utils import *
+import pickle
+import time
 
 
 
@@ -16,7 +18,7 @@ def ingest_info(file):
     pdf_file = fitz.open(file)
     all_embeddings = []
     page_info_dict = {}
-    for page_idx in range(0,10):#[42]: #[86]:#range(pdf_file.page_count):
+    for page_idx in range(100):#[42]: #[86]:#range(pdf_file.page_count):
         # text_from_text = process_text(page_idx, pdf_file, file)
         text_from_text = ''
         text_from_image = process_image(page_idx, pdf_file)
@@ -81,12 +83,18 @@ def process_image(page_idx, pdf_file):
             print(page_idx)
             print('ocr', conf)
             if conf < 75:
+                # time.sleep(10)
                 print('summary')
                 text = summarize_image(image)
+
     return text
             
 
 
 if __name__ == "__main__":
     file = "../../SampleHealthRecord_Redacted.pdf"
-    ingest_info(file)
+    all_embeddings, page_info_dict = ingest_info(file)
+
+    # np.save('embeddings.npy', all_embeddings)
+    # with open('page_info_dict.pickle', 'wb') as handle:
+    #     pickle.dump(page_info_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
