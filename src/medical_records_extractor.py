@@ -18,7 +18,10 @@ def medical_records_extractor(file:str, queries:list[tuple], embedding_path:Opti
         file (str): path of pdf file
         queries (list[list]): each inner list contains the query and the associated terms 
         with that query, [query:str, query_key_words:str]
-
+        embedding_path (str): path to the list of embeddings
+        page_info_dict_path (str): path to page_info_dict dictionary
+    Returns:
+        None
     """
     # if data already exisits pull from database
     if embedding_path and page_info_dict_path:
@@ -40,7 +43,6 @@ def medical_records_extractor(file:str, queries:list[tuple], embedding_path:Opti
 
 
 
-
 if __name__ == "__main__":
     file = "../../SampleHealthRecord_Redacted.pdf"
 
@@ -51,7 +53,7 @@ if __name__ == "__main__":
         ['What allergies does the patient have?', 'allergy, allergies']
     ]
 
-    embedding_path = 'embeddings_all.npy'
+    embedding_path = '../data/embeddings_all.npy'
     page_info_dict_all_path = 'page_info_dict_all.pickle'
     medical_records_extractor(file, queries, embedding_path, page_info_dict_all_path)
     # medical_records_extractor(file, queries)
